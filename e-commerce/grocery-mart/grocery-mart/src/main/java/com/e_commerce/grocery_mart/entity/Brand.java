@@ -22,9 +22,9 @@ public class Brand {
     @Column(name = "brand_name")
     String brandName;
 
-    @OneToOne(mappedBy = "brand")
+    @OneToOne(mappedBy = "brand", fetch = FetchType.LAZY)
     Warehouse warehouse;
 
-    @OneToMany(mappedBy = "brand")
+    @OneToMany(mappedBy = "brand", fetch = FetchType.LAZY)
     Set<Product> productSet;
 }

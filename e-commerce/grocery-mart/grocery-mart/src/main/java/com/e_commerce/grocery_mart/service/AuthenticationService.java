@@ -1,4 +1,4 @@
-package com.e_commerce.grocery_mart.service.imp;
+package com.e_commerce.grocery_mart.service;
 
 import com.e_commerce.grocery_mart.dto.request.AuthenticationRequest;
 import com.e_commerce.grocery_mart.dto.response.AuthenticationResponse;
