@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -36,26 +38,44 @@ public class Product {
     boolean isOutOfStock;
 
     @Column(name = "created_at")
-    Date createdAt;
+    LocalDate createdAt;
 
     @Column(name = "modified_at")
-    Date modifiedAt;
+    LocalDate modifiedAt;
 
     @ManyToOne
     @JoinColumn(name = "brand_id", referencedColumnName = "id")
     Brand brand;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "create_person_id", referencedColumnName = "id")
     User createPerson;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "modify_person_id", referencedColumnName = "id")
     User modifyPerson;
 
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "keyProductSize.product", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<ProductSize> productSizes;
+
+    @OneToMany(mappedBy = "keyProductWeight.product", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<ProductWeight> productWeights;
+
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
     List<CartItem> cartItemList;
 
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
     List<OrderItem> orderItems;
+
+//    Bidirectional (can set productSize without setting productId)
+    public void addProductSize(ProductSize productSize) {
+        productSizes.add(productSize);
+        productSize.setProduct(this);
+    }
+
+//    Bidirectional
+    public void addProductWeight(ProductWeight productWeight) {
+        productWeights.add(productWeight);
+        productWeight.setProduct(this);
+    }
 }

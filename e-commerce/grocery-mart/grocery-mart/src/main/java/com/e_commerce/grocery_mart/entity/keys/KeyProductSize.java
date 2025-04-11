@@ -1,6 +1,9 @@
 package com.e_commerce.grocery_mart.entity.keys;
 
+import com.e_commerce.grocery_mart.entity.Product;
 import jakarta.persistence.Column;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -14,8 +17,9 @@ import java.io.Serializable;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class KeyProductSize implements Serializable {
 
-    @Column(name = "product_id")
-    int productId;
+    @ManyToOne
+    @JoinColumn(name = "product_id", referencedColumnName = "id")
+    Product product;
 
     @Column(name = "size_id")
     int sizeId;

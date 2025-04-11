@@ -22,15 +22,15 @@ public class Size {
     @Column(name = "size_name")
     String sizeName;
 
-    @OneToMany(mappedBy = "size")
+    @OneToMany(mappedBy = "size", fetch = FetchType.LAZY)
     List<WarehouseInventory> warehouseInventories;
 
-    @OneToMany(mappedBy = "size")
+    @OneToMany(mappedBy = "size", fetch = FetchType.LAZY)
     List<ProductSize> productSizes;
 
-    @OneToMany(mappedBy = "size")
+    @OneToMany(mappedBy = "size", fetch = FetchType.LAZY)
     List<CartItem> cartItems;
 
-    @OneToMany(mappedBy = "size")
+    @OneToMany(mappedBy = "size", fetch = FetchType.LAZY)
     List<OrderItem> orderItems;
 }

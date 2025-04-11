@@ -18,19 +18,19 @@ public class WarehouseInventory {
     KeyWarehouseProduct keyWarehouseProduct;
 
     @ManyToOne
-    @JoinColumn(name = "warehouse_id", referencedColumnName = "id")
+    @JoinColumn(name = "warehouse_id", referencedColumnName = "id", insertable=false, updatable=false)
     Warehouse warehouse;
 
     @ManyToOne
-    @JoinColumn(name = "product_id", referencedColumnName = "id")
+    @JoinColumn(name = "product_id", referencedColumnName = "id", insertable=false, updatable=false)
     Product product;
 
     @ManyToOne
-    @JoinColumn(name = "size_id", referencedColumnName = "id")
+    @JoinColumn(name = "size_id", referencedColumnName = "id", insertable=false, updatable=false)
     Size size;
 
     @ManyToOne
-    @JoinColumn(name = "weight_id", referencedColumnName = "id")
+    @JoinColumn(name = "weight_id", referencedColumnName = "id", insertable=false, updatable=false)
     Weight weight;
 
     @Column(name = "quantity")

@@ -20,13 +20,13 @@ public class GlobalExceptionHandler {
                     );
     }
 
-    @ExceptionHandler(value = RuntimeException.class)
-    ResponseEntity<ApiResponse> handlingOtherException(RuntimeException runtimeException) {
-        return ResponseEntity.badRequest()
-                .body(ApiResponse.builder()
-                        .code(ErrorCode.UNCATEGORIZED_EXCEPTION.getCode())
-                        .message(ErrorCode.UNCATEGORIZED_EXCEPTION.getMessage())
-                        .build()
-                );
-    }
+//    @ExceptionHandler(value = RuntimeException.class)
+//    ResponseEntity<ApiResponse> handlingOtherException(RuntimeException runtimeException) {
+//        return ResponseEntity.badRequest()
+//                .body(ApiResponse.builder()
+//                        .code(ErrorCode.UNCATEGORIZED_EXCEPTION.getCode())
+//                        .message(ErrorCode.UNCATEGORIZED_EXCEPTION.getMessage())
+//                        .build()
+//                );
+//    }
 }

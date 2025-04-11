@@ -1,4 +1,4 @@
-package com.e_commerce.grocery_mart.service;
+package com.e_commerce.grocery_mart.service.imp;
 
 import com.e_commerce.grocery_mart.dto.request.AuthenticationRequest;
 import com.e_commerce.grocery_mart.dto.response.AuthenticationResponse;
@@ -10,7 +10,7 @@ import com.e_commerce.grocery_mart.exception.ErrorCode;
 import com.e_commerce.grocery_mart.repository.CustomerRepository;
 import com.e_commerce.grocery_mart.repository.RoleRepository;
 import com.e_commerce.grocery_mart.repository.UserRepository;
-import com.e_commerce.grocery_mart.service.imp.AuthenticationService;
+import com.e_commerce.grocery_mart.service.AuthenticationService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
