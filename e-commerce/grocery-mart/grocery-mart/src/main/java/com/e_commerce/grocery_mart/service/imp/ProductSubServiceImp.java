@@ -44,6 +44,12 @@ public class ProductSubServiceImp implements ProductSubService {
     }
 
     @Override
+    public Size getSizeById(int sizeId) {
+        return sizeRepository.findById(sizeId)
+                .orElseThrow(() -> new AppException(ErrorCode.SIZE_NOTFOUND_EXCEPTION));
+    }
+
+    @Override
     public void addSize(SizeCreationRequest request) {
         if(sizeRepository.existsBySizeName(request.getSizeName().toUpperCase())) {
             throw new AppException(ErrorCode.SIZE_EXISTED_EXCEPTION);
@@ -75,6 +81,12 @@ public class ProductSubServiceImp implements ProductSubService {
             weightDTOS.add(weightDTO);
         }
         return weightDTOS;
+    }
+
+    @Override
+    public Weight getWeightById(int weightId) {
+        return weightRepository.findById(weightId)
+                .orElseThrow(() -> new AppException(ErrorCode.WEIGHT_NOTFOUND_EXCEPTION));
     }
 
     @Override

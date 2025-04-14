@@ -1,6 +1,5 @@
 package com.e_commerce.grocery_mart.entity;
 
-import com.e_commerce.grocery_mart.entity.keys.KeyWarehouseProduct;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -14,23 +13,24 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class WarehouseInventory {
 
-    @EmbeddedId
-    KeyWarehouseProduct keyWarehouseProduct;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    int id;
 
     @ManyToOne
-    @JoinColumn(name = "warehouse_id", referencedColumnName = "id", insertable=false, updatable=false)
+    @JoinColumn(name = "warehouse_id", referencedColumnName = "id")
     Warehouse warehouse;
 
     @ManyToOne
-    @JoinColumn(name = "product_id", referencedColumnName = "id", insertable=false, updatable=false)
+    @JoinColumn(name = "product_id", referencedColumnName = "id")
     Product product;
 
     @ManyToOne
-    @JoinColumn(name = "size_id", referencedColumnName = "id", insertable=false, updatable=false)
+    @JoinColumn(name = "size_id", referencedColumnName = "id")
     Size size;
 
     @ManyToOne
-    @JoinColumn(name = "weight_id", referencedColumnName = "id", insertable=false, updatable=false)
+    @JoinColumn(name = "weight_id", referencedColumnName = "id")
     Weight weight;
 
     @Column(name = "quantity")

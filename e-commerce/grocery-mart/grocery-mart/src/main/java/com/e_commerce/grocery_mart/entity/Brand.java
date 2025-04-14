@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.List;
 import java.util.Set;
 
 @Entity(name = "brands")
@@ -22,8 +23,8 @@ public class Brand {
     @Column(name = "brand_name")
     String brandName;
 
-    @OneToOne(mappedBy = "brand", fetch = FetchType.LAZY)
-    Warehouse warehouse;
+    @OneToMany(mappedBy = "brand", fetch = FetchType.LAZY)
+    List<Warehouse> warehouseList;
 
     @OneToMany(mappedBy = "brand", fetch = FetchType.LAZY)
     Set<Product> productSet;
