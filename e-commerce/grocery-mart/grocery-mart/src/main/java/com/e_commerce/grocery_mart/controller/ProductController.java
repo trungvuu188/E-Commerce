@@ -1,6 +1,7 @@
 package com.e_commerce.grocery_mart.controller;
 
 import com.e_commerce.grocery_mart.dto.request.ProductCreationRequest;
+import com.e_commerce.grocery_mart.dto.request.ProductModifyRequest;
 import com.e_commerce.grocery_mart.dto.response.ApiResponse;
 import com.e_commerce.grocery_mart.dto.response.ProductDTO;
 import com.e_commerce.grocery_mart.service.ProductService;
@@ -20,9 +21,12 @@ public class ProductController {
     ProductService productService;
 
     @GetMapping
-    ApiResponse<List<ProductDTO>> getAllProducts(){
+    ApiResponse<List<ProductDTO>> getAllProducts(@RequestParam(required = false) Integer brandId,
+                                                 @RequestParam(required = false) String brandName,
+                                                 @RequestParam(required = false) Integer sizeId,
+                                                 @RequestParam(required = false) Integer weightId){
         return ApiResponse.<List<ProductDTO>>builder()
-                .result(productService.getAllProduct())
+                .result(productService.getAllProduct(brandId, brandName, sizeId, weightId))
                 .build();
     }
 
@@ -40,9 +44,9 @@ public class ProductController {
                 .build();
     }
 
-    @PutMapping
-    ApiResponse<Void> modifyProduct(){
-        productService.modifyProduct();
+    @PutMapping("/{id}")
+    ApiResponse<Void> modifyProduct(@PathVariable int id, @RequestBody ProductModifyRequest request){
+        productService.modifyProduct(id, request);
         return ApiResponse.<Void>builder()
                 .build();
     }

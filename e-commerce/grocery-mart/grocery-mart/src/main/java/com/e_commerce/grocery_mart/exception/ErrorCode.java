@@ -16,6 +16,7 @@ public enum ErrorCode {
 // User Exception
     ROLE_NOTFOUND_EXCEPTION(5000, "Role is not found"),
     USERNAME_EXISTED_EXCEPTION(5000, "Username is already existed"),
+    USER_NOTFOUND_EXCEPTION(5000, "User is not existed"),
     LOGIN_FAILED_EXCEPTION(5000, "Incorrect username or password"),
 //Date Exception
     INVALID_DATE_EXCEPTION(5000, "Invalid date format"),
@@ -28,8 +29,15 @@ public enum ErrorCode {
     BRAND_NOTFOUND_EXCEPTION(5000, "Brand is not found"),
     PRODUCT_EXISTED_EXCEPTION(5000, "Product is already existed"),
     PRODUCT_NOTFOUND_EXCEPTION(5000, "Product is not found"),
-    ;
+    PRODUCT_UNCHANGED_EXCEPTION(5000, "Product is unchanged"),
 
+//Warehouse
+    WAREHOUSE_EXISTED_EXCEPTION(5000, "Warehouse name is already existed"),
+    WAREHOUSE_NOTFOUND_EXCEPTION(5000, "Warehouse is not found"),
+    PRODUCT_INVENTORY_NOTFOUND_EXCEPTION(5000, "Product Inventory is not found"),
+    PRODUCT_INVENTORY_EXISTED_EXCEPTION(5000, "Product Inventory is already existed"),
+
+    ;
     int code;
     String message;
 }

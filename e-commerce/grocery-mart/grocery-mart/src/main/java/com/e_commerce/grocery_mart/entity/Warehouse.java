@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.List;
+
 @Entity(name = "warehouses")
 @Getter
 @Setter
@@ -20,7 +22,10 @@ public class Warehouse {
     @Column(name = "warehouse_name")
     String wareHouseName;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "brand_id")
     Brand brand;
+
+    @OneToMany(mappedBy = "warehouse", fetch = FetchType.LAZY)
+    List<WarehouseInventory> warehouseInventories;
 }

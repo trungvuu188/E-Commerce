@@ -15,6 +15,9 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.UUID;
 
 @Repository
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -51,5 +54,13 @@ public class AuthenticationServiceImp implements AuthenticationService {
             throw new AppException(ErrorCode.LOGIN_FAILED_EXCEPTION);
         }
         return null;
+    }
+
+    @Override
+    @Transactional
+    public void deleteAccount(UUID accountId) {
+        if(userRepository.deleteAndCountById(accountId) == 0) {
+            throw new AppException(ErrorCode.USER_NOTFOUND_EXCEPTION);
+        }
     }
 }

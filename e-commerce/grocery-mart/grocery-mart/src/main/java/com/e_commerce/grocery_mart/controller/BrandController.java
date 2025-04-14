@@ -29,7 +29,7 @@ public class BrandController {
     @GetMapping("/{id}")
     ApiResponse<BrandDTO> getBrandById(@PathVariable int id) {
         return ApiResponse.<BrandDTO>builder()
-                .result(brandService.getBrandById(id))
+                .result(brandService.getBrandDTOById(id))
                 .build();
     }
 

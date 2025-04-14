@@ -67,7 +67,11 @@ public class Product {
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
     List<OrderItem> orderItems;
 
-//    Bidirectional (can set productSize without setting productId)
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+    List<WarehouseInventory> warehouseInventories;
+
+
+    //    Bidirectional (can set productSize without setting productId)
     public void addProductSize(ProductSize productSize) {
         productSizes.add(productSize);
         productSize.setProduct(this);

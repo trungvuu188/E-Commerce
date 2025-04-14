@@ -39,13 +39,19 @@ public class BrandServiceImp implements BrandService {
     }
 
     @Override
-    public BrandDTO getBrandById(int id) {
+    public BrandDTO getBrandDTOById(int id) {
         Brand brand = brandRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.BRAND_NOTFOUND_EXCEPTION));
         return BrandDTO.builder()
                 .id(brand.getId())
                 .brandName(brand.getBrandName())
                 .build();
+    }
+
+    @Override
+    public Brand getBrandById(int id) {
+        return brandRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.BRAND_NOTFOUND_EXCEPTION));
     }
 
     @Override
