@@ -1,16 +1,17 @@
 package com.e_commerce.grocery_mart.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import lombok.experimental.SuperBuilder;
+
+import java.util.List;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@SuperBuilder
+@Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public abstract class AuthenticationResponse {
-
-    String token;
+public class IntrospectResponse {
+    boolean isValid;
 }

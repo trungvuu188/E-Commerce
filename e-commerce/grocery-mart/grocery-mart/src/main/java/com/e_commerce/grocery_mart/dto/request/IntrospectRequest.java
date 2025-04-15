@@ -1,16 +1,15 @@
-package com.e_commerce.grocery_mart.dto.response;
+package com.e_commerce.grocery_mart.dto.request;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@SuperBuilder
+@Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public abstract class AuthenticationResponse {
+public class IntrospectRequest {
 
     String token;
 }

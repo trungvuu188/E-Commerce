@@ -13,7 +13,7 @@ import java.util.UUID;
 @Repository
 public interface UserRepository extends JpaRepository<User, UUID> {
     boolean existsByUsername(String userName);
-    User findByUsernameAndPassword(String userName, String password);
+    User findByUsername(String userName);
     @Modifying
     @Query("DELETE FROM users u where u.id = :id")
     int deleteAndCountById(@Param("id") UUID id);

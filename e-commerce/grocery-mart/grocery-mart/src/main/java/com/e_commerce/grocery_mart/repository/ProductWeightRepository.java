@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ProductWeightRepository extends JpaRepository<ProductWeight, KeyProductWeight>, JpaSpecificationExecutor<ProductWeight> {
+    ProductWeight findByKeyProductWeight(KeyProductWeight keyProductWeight);
 }
