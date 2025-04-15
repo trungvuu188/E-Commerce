@@ -1,4 +1,4 @@
-package com.e_commerce.grocery_mart.dto.request;
+package com.e_commerce.grocery_mart.dto.response;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -9,8 +9,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class AuthenticationRequest {
-
-    String username;
-    String password;
+public class RoleDTO {
+    int id;
+    String roleName;
 }

@@ -19,4 +19,5 @@ public interface ProductService {
     void deleteProduct(int id);
     void updateProductSize(Product product, List<ProductSizeDTO> productSizeDTOS);
     void updateProductWeight(Product product, List<ProductWeightDTO> productWeightDTOS);
+    double calculateProductPrice(int productId, int sizeId, int weightId, int quantity);
 }

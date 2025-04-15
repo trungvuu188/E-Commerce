@@ -29,6 +29,9 @@ public class Customer extends User {
     @Column(name = "phone")
     String phone;
 
+    @Column(name = "avatar")
+    String avatarUrl;
+
     @OneToMany(mappedBy = "customer")
     Set<Address> addressSet;
 

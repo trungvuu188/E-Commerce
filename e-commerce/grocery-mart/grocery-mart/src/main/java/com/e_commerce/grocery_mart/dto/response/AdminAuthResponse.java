@@ -10,7 +10,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @SuperBuilder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public abstract class AuthenticationResponse {
-
-    String token;
+@EqualsAndHashCode(callSuper = true)
+public class AdminAuthResponse extends AuthenticationResponse {
+    String admin;
 }

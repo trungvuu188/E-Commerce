@@ -10,7 +10,12 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @SuperBuilder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public abstract class AuthenticationResponse {
+@EqualsAndHashCode(callSuper = true)
+public class CustomerAuthResponse extends AuthenticationResponse {
 
-    String token;
+    String avatarUrl;
+    String fullName;
+    String email;
+    String phoneNumber;
+    String password;
 }

@@ -35,10 +35,12 @@ import java.util.List;
 public class ProductServiceImp implements ProductService {
 
     BrandService brandService;
-    ProductRepository productRepository;
     ProductSubService productSubService;
-    DateTimeConverter dateTimeConverter;
     ProductMapper productMapper;
+    DateTimeConverter dateTimeConverter;
+    ProductRepository productRepository;
+    ProductSizeRepository productSizeRepository;
+    ProductWeightRepository productWeightRepository;
     UserRepository userRepository;
     ProductSpecification productSpecification;
 
@@ -93,9 +95,7 @@ public class ProductServiceImp implements ProductService {
                 .productWeights(new ArrayList<>())
                 .createdAt(dateTimeConverter.formatDate(LocalDate.now()))
                 .build();
-//        Set list size for product
         updateProductSize(product, request.getProductSizeDTOS());
-//        Set list weight for product
         updateProductWeight(product, request.getProductWeightDTOS());
 
         productRepository.save(product);
@@ -185,5 +185,25 @@ public class ProductServiceImp implements ProductService {
                     .build();
             product.addProductWeight(productWeight);
         });
+    }
+
+    @Override
+    public double calculateProductPrice(int productId, int sizeId, int weightId, int quantity) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOTFOUND_EXCEPTION));
+        KeyProductSize keyProductSize = KeyProductSize.builder()
+                .sizeId(sizeId)
+                .product(product)
+                .build();
+        ProductSize productSize = productSizeRepository.findByKeyProductSize(keyProductSize);
+        KeyProductWeight keyProductWeight = KeyProductWeight.builder()
+                .weightId(weightId)
+                .product(product)
+                .build();
+        ProductWeight productWeight = productWeightRepository.findByKeyProductWeight(keyProductWeight);
+        double sizeScalePrice = product.getBasePrice() * productSize.getPriceScale();
+        double weightScalePrice = product.getBasePrice() * productWeight.getPriceScale();
+        double totalPrice = (product.getBasePrice() + sizeScalePrice + weightScalePrice) * quantity;
+        return totalPrice;
     }
 }
