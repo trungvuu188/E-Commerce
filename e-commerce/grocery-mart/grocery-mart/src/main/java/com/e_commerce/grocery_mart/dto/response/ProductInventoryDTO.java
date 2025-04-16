@@ -18,7 +18,5 @@ public class ProductInventoryDTO {
     String productName;
     int sizeId;
     String sizeName;
-    int weightId;
-    String weightName;
     int quantity;
 }

@@ -92,8 +92,6 @@ public class WarehouseServiceImp implements WarehouseService {
                     .productName(warehouseInventory.getProduct().getProductName())
                     .sizeId(warehouseInventory.getSize().getId())
                     .sizeName(warehouseInventory.getSize().getSizeName())
-                    .weightId(warehouseInventory.getWeight().getId())
-                    .weightName(warehouseInventory.getWeight().getWeightName())
                     .quantity(warehouseInventory.getQuantity())
                     .build();
             productInventoryDTOS.add(productInventoryDTO);
@@ -105,17 +103,15 @@ public class WarehouseServiceImp implements WarehouseService {
     public void addProductInventory(ProductInventoryCreationRequest request) {
         Warehouse warehouse = warehouseRepository.findById(request.getWarehouseId())
                 .orElseThrow(() -> new AppException(ErrorCode.WAREHOUSE_NOTFOUND_EXCEPTION));
-        if(warehouseInventoryRepository.existsByProductIdAndSizeIdAndWeightId(
+        if(warehouseInventoryRepository.existsByProductIdAndSizeId(
                 request.getProductId(),
-                request.getSizeId(),
-                request.getWeightId())){
+                request.getSizeId())){
             throw new AppException(ErrorCode.PRODUCT_INVENTORY_EXISTED_EXCEPTION);
         }
         WarehouseInventory warehouseInventory = WarehouseInventory.builder()
                 .warehouse(warehouse)
                 .product(productService.getBaseProductById(request.getProductId()))
                 .size(productSubService.getSizeById(request.getSizeId()))
-                .weight(productSubService.getWeightById(request.getWeightId()))
                 .quantity(request.getQuantity())
                 .build();
         warehouseInventoryRepository.save(warehouseInventory);
@@ -135,5 +131,10 @@ public class WarehouseServiceImp implements WarehouseService {
         if(warehouseInventoryRepository.deleteAndGetCountById(id) == 0){
             throw new AppException(ErrorCode.PRODUCT_INVENTORY_NOTFOUND_EXCEPTION);
         }
+    }
+
+    @Override
+    public List<WarehouseInventory> getInventoryByProductId(int productId) {
+        return warehouseInventoryRepository.findAllByProductId(productId);
     }
 }

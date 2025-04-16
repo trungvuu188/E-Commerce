@@ -1,7 +1,6 @@
 package com.e_commerce.grocery_mart.dto.request;
 
 import com.e_commerce.grocery_mart.dto.response.ProductSizeDTO;
-import com.e_commerce.grocery_mart.dto.response.ProductWeightDTO;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -22,5 +21,4 @@ public class ProductCreationRequest {
     double basePrice;
     String imageUrl;
     List<ProductSizeDTO> productSizeDTOS;
-    List<ProductWeightDTO> productWeightDTOS;
 }

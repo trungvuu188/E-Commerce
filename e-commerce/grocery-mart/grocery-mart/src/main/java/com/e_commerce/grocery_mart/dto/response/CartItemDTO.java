@@ -20,8 +20,6 @@ public class CartItemDTO {
     String imageUrl;
     int sizeId;
     String sizeName;
-    int weightId;
-    String weightName;
     int quantity;
     double price;
 }

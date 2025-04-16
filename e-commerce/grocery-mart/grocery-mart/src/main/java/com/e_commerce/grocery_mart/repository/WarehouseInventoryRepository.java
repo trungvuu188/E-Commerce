@@ -6,12 +6,16 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface WarehouseInventoryRepository extends JpaRepository<WarehouseInventory, Integer> {
 
-    boolean existsByProductIdAndSizeIdAndWeightId(int productId, int sizeId, int weightId);
+    boolean existsByProductIdAndSizeId(int productId, int sizeId);
 
     @Modifying
     @Query("DELETE FROM warehouse_inventory w where w.id = :id")
     int deleteAndGetCountById(int id);
+
+    List<WarehouseInventory> findAllByProductId(int productId);
 }

@@ -1,12 +1,8 @@
 package com.e_commerce.grocery_mart.dto.request;
 
-import com.e_commerce.grocery_mart.dto.response.ProductSizeDTO;
-import com.e_commerce.grocery_mart.dto.response.ProductWeightDTO;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.util.List;
 
 @Getter
 @Setter
@@ -20,6 +16,5 @@ public class ProductInventoryCreationRequest {
     int warehouseId;
     int productId;
     int sizeId;
-    int weightId;
     int quantity;
 }

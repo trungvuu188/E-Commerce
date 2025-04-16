@@ -105,6 +105,7 @@ public class AuthenticationServiceImp implements AuthenticationService {
             Customer customer = (Customer) user;
             CustomerAuthResponse response = CustomerAuthResponse.builder()
                     .token(token)
+                    .customerId(customer.getId())
                     .fullName(customer.getFullName())
                     .email(customer.getEmail())
                     .password(customer.getPassword())
@@ -170,7 +171,8 @@ public class AuthenticationServiceImp implements AuthenticationService {
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
                 .subject(user.getUsername())
                 .issuer("404Xuv.dev")
-                .issueTime(new Date(
+                .issueTime(new Date())
+                .expirationTime(new Date(
                         Instant.now().plus(VALID_DURATION, ChronoUnit.SECONDS).toEpochMilli()))
                 .jwtID(UUID.randomUUID().toString())
                 .claim("scope", buildScope(user))

@@ -2,6 +2,7 @@ package com.e_commerce.grocery_mart.service.imp;
 
 import com.e_commerce.grocery_mart.dto.request.AddToCartRequest;
 import com.e_commerce.grocery_mart.dto.request.UpdateCartItemRequest;
+import com.e_commerce.grocery_mart.dto.response.CartDTO;
 import com.e_commerce.grocery_mart.dto.response.CartItemDTO;
 import com.e_commerce.grocery_mart.entity.Cart;
 import com.e_commerce.grocery_mart.entity.CartItem;
@@ -54,48 +55,48 @@ public class CustomerServiceImp implements CustomerService {
     }
 
     @Override
-    public List<CartItemDTO> getCart(UUID customerId) {
+    public CartDTO getCart(UUID customerId) {
         Cart cart = getOrCreateCart(customerId);
         List<CartItemDTO> cartItemDTOS = new ArrayList<>();
-        for (CartItem cartItem : cart.getCartItems()) {
-            double itemPrice = productService.calculateProductPrice(
-                    cartItem.getProduct().getId(),
-                    cartItem.getSize().getId(),
-                    cartItem.getWeight().getId(),
-                    cartItem.getQuantity()
-            );
-            CartItemDTO cartItemDTO = CartItemDTO.builder()
-                    .cartItemId(cartItem.getId())
-                    .productId(cartItem.getProduct().getId())
-                    .brandName(cartItem.getProduct().getBrand().getBrandName())
-                    .productName(cartItem.getProduct().getProductName())
-                    .sizeId(cartItem.getSize().getId())
-                    .sizeName(cartItem.getSize().getSizeName())
-                    .weightId(cartItem.getWeight().getId())
-                    .weightName(cartItem.getWeight().getWeightName())
-                    .quantity(cartItem.getQuantity())
-                    .imageUrl(cartItem.getProduct().getImageURL())
-                    .price(itemPrice)
-                    .build();
-            cartItemDTOS.add(cartItemDTO);
+        if(cart.getCartItems() != null) {
+            for (CartItem cartItem : cart.getCartItems()) {
+                double itemPrice = productService.calculateProductPrice(
+                        cartItem.getProduct().getId(),
+                        cartItem.getSize().getId(),
+                        cartItem.getQuantity()
+                );
+                CartItemDTO cartItemDTO = CartItemDTO.builder()
+                        .cartItemId(cartItem.getId())
+                        .productId(cartItem.getProduct().getId())
+                        .brandName(cartItem.getProduct().getBrand().getBrandName())
+                        .productName(cartItem.getProduct().getProductName())
+                        .sizeId(cartItem.getSize().getId())
+                        .sizeName(cartItem.getSize().getSizeName())
+                        .quantity(cartItem.getQuantity())
+                        .imageUrl(cartItem.getProduct().getImageURL())
+                        .price(itemPrice)
+                        .build();
+                cartItemDTOS.add(cartItemDTO);
+            }
         }
-        return cartItemDTOS;
+        return CartDTO.builder()
+                .cartId(cart.getId())
+                .cartItemDTOS(cartItemDTOS)
+                .build();
     }
 
     @Override
     public void addToCart(AddToCartRequest request) {
         Cart cart = getOrCreateCart(request.getCustomerId());
-        CartItem cartItem = cartItemRepository.findByCartIdAndProductIdAndSizeIdAndWeightId(
+        CartItem cartItem = cartItemRepository.findByCartIdAndProductIdAndSizeId(
                 request.getCartId(),
                 request.getProductId(),
-                request.getSizeId(),
                 request.getSizeId());
         if(cartItem == null) {
             cartItem = CartItem.builder()
                     .cart(cart)
                     .product(productService.getBaseProductById(request.getProductId()))
                     .size(productSubService.getSizeById(request.getSizeId()))
-                    .weight(productSubService.getWeightById(request.getWeightId()))
                     .quantity(request.getQuantity())
                     .build();
         } else {
@@ -103,27 +104,37 @@ public class CustomerServiceImp implements CustomerService {
         }
         cartItem.setTotalPrice(
                 productService.calculateProductPrice(
-                        request.getProductId(), request.getSizeId(), request.getWeightId(), cartItem.getQuantity()
+                        request.getProductId(), request.getSizeId(), cartItem.getQuantity()
                 )
         );
         cartItemRepository.save(cartItem);
     }
 
     @Override
+    @Transactional
     public void updateCart(UpdateCartItemRequest request) {
+
         CartItem cartItem = cartItemRepository.findById(request.getCartItemId())
                 .orElseThrow(() -> new AppException(ErrorCode.CART_ITEM_NOTFOUND_EXCEPTION));
 
-        if(request.getSizeId() != 0) {
-            cartItem.setSize(productSubService.getSizeById(request.getSizeId()));
+        CartItem cartItemDuplicated = cartItemRepository.findByCartIdAndProductIdAndSizeId(
+                request.getCartId(),
+                cartItem.getProduct().getId(),
+                request.getSizeId()
+                );
+        if(cartItemDuplicated == null) {
+            if(request.getSizeId() != 0) {
+                cartItem.setSize(productSubService.getSizeById(request.getSizeId()));
+            }
+            if(request.getQuantity() != 0){
+                cartItem.setQuantity(request.getQuantity());
+            }
+            cartItemRepository.save(cartItem);
+        } else {
+            cartItemDuplicated.setQuantity(request.getQuantity() + cartItemDuplicated.getQuantity());
+            cartItemRepository.deleteById(cartItem.getId());
+            cartItemRepository.save(cartItemDuplicated);
         }
-        if(request.getWeightId() != 0){
-            cartItem.setWeight(productSubService.getWeightById(request.getWeightId()));
-        }
-        if(request.getQuantity() != 0){
-            cartItem.setQuantity(request.getQuantity());
-        }
-        cartItemRepository.save(cartItem);
     }
 
     @Override
@@ -132,5 +143,20 @@ public class CustomerServiceImp implements CustomerService {
         if(cartItemRepository.deleteAndGetCountById(cartItemId) == 0) {
             throw new AppException(ErrorCode.CART_ITEM_NOTFOUND_EXCEPTION);
         }
+    }
+
+    @Override
+    public void addToWishlist() {
+
+    }
+
+    @Override
+    public void updateWishlist() {
+
+    }
+
+    @Override
+    public void deleteFromWishlist(int wishlistId) {
+
     }
 }

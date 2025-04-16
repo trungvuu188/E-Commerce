@@ -19,7 +19,7 @@ public class ProductDTO {
     String productDesc;
     String imageUrl;
     List<ProductSizeDTO> productSizeDTOList;
-    List<ProductWeightDTO> productWeightDTOList;
     double basePrice;
+    double calculatedPrice;
     boolean isOutOfStock;
 }

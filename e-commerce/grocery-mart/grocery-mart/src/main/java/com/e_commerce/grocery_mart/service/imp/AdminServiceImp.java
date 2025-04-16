@@ -1,5 +1,6 @@
 package com.e_commerce.grocery_mart.service.imp;
 
+import com.e_commerce.grocery_mart.constant.PredefinedRole;
 import com.e_commerce.grocery_mart.dto.request.RoleCreationRequest;
 import com.e_commerce.grocery_mart.dto.response.RoleDTO;
 import com.e_commerce.grocery_mart.entity.Role;
@@ -52,5 +53,11 @@ public class AdminServiceImp implements AdminService {
         if(roleRepository.deleteAndGetCountById(roleId) == 0) {
             throw new AppException(ErrorCode.ROLE_NOTFOUND_EXCEPTION);
         }
+    }
+
+    @Override
+    public Role getAdminRole() {
+        return roleRepository.findByRoleName(PredefinedRole.ADMIN_ROLE)
+                .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOTFOUND_EXCEPTION));
     }
 }

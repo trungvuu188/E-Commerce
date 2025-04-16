@@ -14,6 +14,5 @@ public class UpdateCartItemRequest {
     int cartId;
     int cartItemId;
     int sizeId;
-    int weightId;
     int quantity;
 }

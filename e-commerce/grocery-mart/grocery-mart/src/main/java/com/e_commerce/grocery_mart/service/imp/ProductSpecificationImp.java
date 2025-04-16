@@ -3,7 +3,6 @@ package com.e_commerce.grocery_mart.service.imp;
 import com.e_commerce.grocery_mart.entity.Brand;
 import com.e_commerce.grocery_mart.entity.Product;
 import com.e_commerce.grocery_mart.entity.ProductSize;
-import com.e_commerce.grocery_mart.entity.ProductWeight;
 import com.e_commerce.grocery_mart.service.ProductSpecification;
 import jakarta.persistence.criteria.Join;
 import org.springframework.data.jpa.domain.Specification;
@@ -29,14 +28,6 @@ public class ProductSpecificationImp implements ProductSpecification {
         return ((root, query, builder) -> {
             Join<Product, ProductSize> productProductSizeJoin = root.join("productSizes");
             return builder.equal(productProductSizeJoin.get("size").as(Integer.class), sizeId);
-        });
-    }
-
-    @Override
-    public Specification<Product> weightLike(int weightId) {
-        return ((root, query, builder) -> {
-            Join<Product, ProductWeight> productProductWeightJoin = root.join("productWeights");
-            return builder.equal(productProductWeightJoin.get("weight").as(Integer.class), weightId);
         });
     }
 }

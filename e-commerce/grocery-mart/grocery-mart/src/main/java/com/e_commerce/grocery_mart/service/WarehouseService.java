@@ -4,6 +4,7 @@ import com.e_commerce.grocery_mart.dto.request.ProductInventoryCreationRequest;
 import com.e_commerce.grocery_mart.dto.request.ProductInventoryUpdateRequest;
 import com.e_commerce.grocery_mart.dto.response.ProductInventoryDTO;
 import com.e_commerce.grocery_mart.dto.response.WarehouseDTO;
+import com.e_commerce.grocery_mart.entity.WarehouseInventory;
 
 import java.util.List;
 
@@ -17,4 +18,5 @@ public interface WarehouseService {
     List<ProductInventoryDTO> getProductInventory(int warehouseId);
     void updateProductInventory(ProductInventoryUpdateRequest request);
     void deleteProductInventory(int id);
+    List<WarehouseInventory> getInventoryByProductId(int productId);
 }

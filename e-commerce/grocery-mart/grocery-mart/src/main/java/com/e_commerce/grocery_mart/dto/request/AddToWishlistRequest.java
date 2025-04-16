@@ -1,7 +1,9 @@
-package com.e_commerce.grocery_mart.dto.response;
+package com.e_commerce.grocery_mart.dto.request;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -9,7 +11,8 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class WeightDTO {
-    int id;
-    String weightName;
+public class AddToWishlistRequest {
+
+    UUID customerId;
+    int productId;
 }

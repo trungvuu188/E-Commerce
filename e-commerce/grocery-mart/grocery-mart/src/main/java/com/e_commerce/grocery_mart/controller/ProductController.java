@@ -23,10 +23,9 @@ public class ProductController {
     @GetMapping
     ApiResponse<List<ProductDTO>> getAllProducts(@RequestParam(required = false) Integer brandId,
                                                  @RequestParam(required = false) String brandName,
-                                                 @RequestParam(required = false) Integer sizeId,
-                                                 @RequestParam(required = false) Integer weightId){
+                                                 @RequestParam(required = false) Integer sizeId){
         return ApiResponse.<List<ProductDTO>>builder()
-                .result(productService.getAllProduct(brandId, brandName, sizeId, weightId))
+                .result(productService.getAllProduct(brandId, brandName, sizeId))
                 .build();
     }
 

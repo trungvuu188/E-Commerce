@@ -19,20 +19,16 @@ public class CartItem {
     int id;
 
     @ManyToOne
-    @JoinColumn(name = "cart_id", referencedColumnName = "id", insertable=false, updatable=false)
+    @JoinColumn(name = "cart_id", referencedColumnName = "id")
     Cart cart;
 
     @ManyToOne
-    @JoinColumn(name = "product_id", referencedColumnName = "id", insertable=false, updatable=false)
+    @JoinColumn(name = "product_id", referencedColumnName = "id")
     Product product;
 
     @ManyToOne
-    @JoinColumn(name = "size_id", referencedColumnName = "id", insertable=false, updatable=false)
+    @JoinColumn(name = "size_id", referencedColumnName = "id")
     Size size;
-
-    @ManyToOne
-    @JoinColumn(name = "weight_id", referencedColumnName = "id", insertable=false, updatable=false)
-    Weight weight;
 
     @Column(name = "quantity")
     int quantity;

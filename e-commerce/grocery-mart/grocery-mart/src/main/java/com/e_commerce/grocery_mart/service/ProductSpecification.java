@@ -8,5 +8,4 @@ public interface ProductSpecification {
     Specification<Product> brandLike(int brandId);
     Specification<Product> brandNameLike(String brandName);
     Specification<Product> sizeLike(int sizeId);
-    Specification<Product> weightLike(int weightId);
 }

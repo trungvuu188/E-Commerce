@@ -1,10 +1,8 @@
 package com.e_commerce.grocery_mart.controller;
 
 import com.e_commerce.grocery_mart.dto.request.SizeCreationRequest;
-import com.e_commerce.grocery_mart.dto.request.WeightCreationRequest;
 import com.e_commerce.grocery_mart.dto.response.ApiResponse;
 import com.e_commerce.grocery_mart.dto.response.SizeDTO;
-import com.e_commerce.grocery_mart.dto.response.WeightDTO;
 import com.e_commerce.grocery_mart.service.ProductSubService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -41,26 +39,4 @@ public class SubProductController {
         return ApiResponse.<Void>builder()
                 .build();
     }
-
-    @GetMapping("/weight")
-    ApiResponse<List<WeightDTO>> getAllWeights(){
-        return ApiResponse.<List<WeightDTO>>builder()
-                .result(productSubService.getWeights())
-                .build();
-    }
-
-    @PostMapping("/weight")
-    ApiResponse<Void> createWeight(@RequestBody WeightCreationRequest request){
-        productSubService.addWeight(request);
-        return ApiResponse.<Void>builder()
-                .build();
-    }
-
-    @DeleteMapping("/weight/{id}")
-    ApiResponse<Void> deleteWeight(@PathVariable int id){
-        productSubService.removeWeight(id);
-        return ApiResponse.<Void>builder()
-                .build();
-    }
-
 }
