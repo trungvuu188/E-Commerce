@@ -1,6 +1,7 @@
 package com.e_commerce.grocery_mart.service;
 
 import com.e_commerce.grocery_mart.dto.request.AddToCartRequest;
+import com.e_commerce.grocery_mart.dto.request.RatingProductRequest;
 import com.e_commerce.grocery_mart.dto.request.UpdateCartItemRequest;
 import com.e_commerce.grocery_mart.dto.response.CartDTO;
 import com.e_commerce.grocery_mart.dto.response.CartItemDTO;
@@ -21,5 +22,5 @@ public interface CustomerService {
     void addToWishlist();
     void updateWishlist();
     void deleteFromWishlist(int wishlistId);
-
+    void ratingProduct(RatingProductRequest request);
 }

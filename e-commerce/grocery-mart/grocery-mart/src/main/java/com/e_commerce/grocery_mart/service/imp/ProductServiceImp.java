@@ -1,6 +1,7 @@
 package com.e_commerce.grocery_mart.service.imp;
 
 import com.e_commerce.grocery_mart.dto.request.ProductCreationRequest;
+import com.e_commerce.grocery_mart.dto.request.ProductInventoryCreationRequest;
 import com.e_commerce.grocery_mart.dto.request.ProductModifyRequest;
 import com.e_commerce.grocery_mart.dto.response.ProductDTO;
 import com.e_commerce.grocery_mart.dto.response.ProductSizeDTO;
@@ -20,6 +21,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,23 +37,33 @@ public class ProductServiceImp implements ProductService {
     DateTimeConverter dateTimeConverter;
     ProductRepository productRepository;
     ProductSizeRepository productSizeRepository;
-    UserRepository userRepository;
     ProductSpecification productSpecification;
+    UserRepository userRepository;
+    WarehouseService warehouseService;
+    CloudinaryService cloudinaryService;
+    FeatureProductRepository featureProductRepository;
+
 
     @Override
-    public List<ProductDTO> getAllProduct(Integer brandId, String brandName, Integer sizeId) {
-
+    public List<ProductDTO> getAllFeatureProduct() {
         List<ProductDTO> productDTOS = new ArrayList<>();
-        List<Product> products;
+        List<FeatureProduct> featureProducts = featureProductRepository.findAll();
+        for (FeatureProduct featureProduct : featureProducts) {
+            productDTOS.add(productMapper.toProductDTO(featureProduct.getProduct()));
+        }
+        return productDTOS;
+    }
+
+    @Override
+    public List<ProductDTO> getAllProduct(Integer brandId, String brandName, String productName) {
         Specification<Product> filters = Specification
                 .where(brandId == null ? null : productSpecification.brandLike(brandId))
                 .and(StringUtils.isEmpty(brandName) ? null : productSpecification.brandNameLike(brandName))
-                .and(sizeId == null ? null : productSpecification.sizeLike(sizeId));
-        products = productRepository.findAll(filters);
-
-        for(Product product : products) {
-            ProductDTO productDTO = productMapper.toProductDTO(product);
-            productDTOS.add(productDTO);
+                .and(StringUtils.isEmpty(productName) ? null : productSpecification.productNameLike(productName));
+        List<Product> products = productRepository.findAll(filters);
+        List<ProductDTO> productDTOS = new ArrayList<>();
+        for (Product product : products) {
+            productDTOS.add(productMapper.toProductDTO(product));
         }
         return productDTOS;
     }
@@ -72,13 +84,12 @@ public class ProductServiceImp implements ProductService {
 
     @Override
     @Transactional
-    public void addProduct(ProductCreationRequest request) {
+    public Product addProduct(ProductCreationRequest request) {
 
         if(productRepository.existsByProductName(request.getProductName())) {
             throw new AppException(ErrorCode.PRODUCT_EXISTED_EXCEPTION);
         }
         Brand brand = brandService.getBrandById(request.getBrandId());
-
         Product product = Product.builder()
                 .brand(brand)
                 .productName(request.getProductName())
@@ -86,10 +97,11 @@ public class ProductServiceImp implements ProductService {
                 .basePrice(request.getBasePrice())
                 .productSizes(new ArrayList<>())
                 .createdAt(dateTimeConverter.formatDate(LocalDate.now()))
+                .imageURL(cloudinaryService.upload(request.getImageUrl()))
                 .build();
         updateProductSize(product, request.getProductSizeDTOS());
-
-        productRepository.save(product);
+        warehouseService.addProductInventory(request.getWarehouseId(), product, request.getProductSizeDTOS());
+        return productRepository.save(product);
     }
 
     @Override
@@ -119,19 +131,14 @@ public class ProductServiceImp implements ProductService {
             isModified = true;
         }
 
-        if(request.getProductSizeDTOS() != null && !request.getProductSizeDTOS().isEmpty()) {
-            updateProductSize(product, request.getProductSizeDTOS());
-            isModified = true;
-        }
-
         if(!isModified) {
             throw new AppException(ErrorCode.PRODUCT_UNCHANGED_EXCEPTION);
         }
 
         if(isModified) {
-//            User user = userRepository.findById(request.getModifyPersonId())
-//                    .orElseThrow(() -> new AppException(ErrorCode.USER_NOTFOUND_EXCEPTION));
-//            product.setModifyPerson(user);
+            User user = userRepository.findById(request.getModifyPersonId())
+                    .orElseThrow(() -> new AppException(ErrorCode.USER_NOTFOUND_EXCEPTION));
+            product.setModifyPerson(user);
             product.setModifiedAt(dateTimeConverter.formatDate(LocalDate.now()));
             productRepository.save(product);
         }
@@ -140,6 +147,7 @@ public class ProductServiceImp implements ProductService {
     @Override
     @Transactional
     public void deleteProduct(int id) {
+        productSizeRepository.deleteAndGetCountById(id);
         if(productRepository.deleteAndGetCountById(id) == 0) {
             throw new AppException(ErrorCode.PRODUCT_NOTFOUND_EXCEPTION);
         }
@@ -161,6 +169,7 @@ public class ProductServiceImp implements ProductService {
 
     @Override
     public double calculateProductPrice(int productId, int sizeId, int quantity) {
+        DecimalFormat df = new DecimalFormat("#.##");
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOTFOUND_EXCEPTION));
         KeyProductSize keyProductSize = KeyProductSize.builder()
@@ -170,6 +179,6 @@ public class ProductServiceImp implements ProductService {
         ProductSize productSize = productSizeRepository.findByKeyProductSize(keyProductSize);
         double sizeScalePrice = product.getBasePrice() * productSize.getPriceScale();
         double totalPrice = (product.getBasePrice() + sizeScalePrice) * quantity;
-        return totalPrice;
+        return Double.valueOf(df.format(totalPrice));
     }
 }

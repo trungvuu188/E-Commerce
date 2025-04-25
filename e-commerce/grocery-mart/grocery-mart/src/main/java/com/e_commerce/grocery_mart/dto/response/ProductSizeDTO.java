@@ -15,5 +15,4 @@ public class ProductSizeDTO {
     String sizeName;
     double priceScale;
     int quantity;
-
 }

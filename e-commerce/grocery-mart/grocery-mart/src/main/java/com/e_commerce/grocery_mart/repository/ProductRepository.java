@@ -10,7 +10,7 @@ import java.util.List;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Integer>, JpaSpecificationExecutor<Product> {
 
-    @EntityGraph(attributePaths = {"productSizes", "productWeights"})
+    @EntityGraph(attributePaths = {"productSizes"})
     List<Product> findAll();
 
     boolean existsByProductName(String productName);

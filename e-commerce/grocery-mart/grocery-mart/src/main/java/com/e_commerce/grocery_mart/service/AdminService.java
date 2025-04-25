@@ -12,4 +12,6 @@ public interface AdminService {
     List<RoleDTO> getAllRole();
     void deleteRole(int roleId);
     Role getAdminRole();
+    void addFeaturedProduct(int productId);
+    void removeFeatureProduct(int productId);
 }

@@ -2,7 +2,8 @@ package com.e_commerce.grocery_mart.dto.request;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import org.springframework.web.multipart.MultipartFile;
+
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -10,8 +11,10 @@ import org.springframework.web.multipart.MultipartFile;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class BrandCreationRequest {
+public class RatingProductRequest {
 
-    String brandName;
-    MultipartFile brandImg;
+    UUID customerId;
+    int productId;
+    int stars;
+    String comment;
 }

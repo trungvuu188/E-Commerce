@@ -1,17 +1,21 @@
 package com.e_commerce.grocery_mart.service.imp;
 
 import com.e_commerce.grocery_mart.dto.request.AddToCartRequest;
+import com.e_commerce.grocery_mart.dto.request.RatingProductRequest;
 import com.e_commerce.grocery_mart.dto.request.UpdateCartItemRequest;
 import com.e_commerce.grocery_mart.dto.response.CartDTO;
 import com.e_commerce.grocery_mart.dto.response.CartItemDTO;
 import com.e_commerce.grocery_mart.entity.Cart;
 import com.e_commerce.grocery_mart.entity.CartItem;
 import com.e_commerce.grocery_mart.entity.Customer;
+import com.e_commerce.grocery_mart.entity.Rating;
 import com.e_commerce.grocery_mart.exception.AppException;
 import com.e_commerce.grocery_mart.exception.ErrorCode;
+import com.e_commerce.grocery_mart.helper.DateTimeConverter;
 import com.e_commerce.grocery_mart.repository.CartItemRepository;
 import com.e_commerce.grocery_mart.repository.CartRepository;
 import com.e_commerce.grocery_mart.repository.CustomerRepository;
+import com.e_commerce.grocery_mart.repository.RatingRepository;
 import com.e_commerce.grocery_mart.service.CustomerService;
 import com.e_commerce.grocery_mart.service.ProductService;
 import com.e_commerce.grocery_mart.service.ProductSubService;
@@ -21,6 +25,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -35,6 +40,8 @@ public class CustomerServiceImp implements CustomerService {
     CartItemRepository cartItemRepository;
     ProductService productService;
     ProductSubService productSubService;
+    RatingRepository ratingRepository;
+    DateTimeConverter dateTimeConverter;
 
     @Override
     public Customer getCustomerById(UUID customerId) {
@@ -158,5 +165,17 @@ public class CustomerServiceImp implements CustomerService {
     @Override
     public void deleteFromWishlist(int wishlistId) {
 
+    }
+
+    @Override
+    public void ratingProduct(RatingProductRequest request) {
+        Rating rating = Rating.builder()
+                .customer(getCustomerById(request.getCustomerId()))
+                .product(productService.getBaseProductById(request.getProductId()))
+                .stars(request.getStars())
+                .comment(request.getComment())
+                .createAt(dateTimeConverter.formatDate(LocalDate.now()))
+                .build();
+        ratingRepository.save(rating);
     }
 }

@@ -38,4 +38,15 @@ public class AdminController {
         return ApiResponse.<Void>builder().build();
     }
 
+    @PostMapping("/feature-product/{id}")
+    public ApiResponse<Void> addFeatureProduct(@PathVariable(name = "id") int productId) {
+        adminService.addFeaturedProduct(productId);
+        return ApiResponse.<Void>builder().build();
+    }
+
+    @DeleteMapping("/feature-product/{id}")
+    public ApiResponse<Void> removeFeatureProduct(@PathVariable(name = "id") int productId) {
+        adminService.removeFeatureProduct(productId);
+        return ApiResponse.<Void>builder().build();
+    }
 }

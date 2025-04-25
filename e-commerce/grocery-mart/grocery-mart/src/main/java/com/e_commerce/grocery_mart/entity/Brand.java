@@ -23,6 +23,9 @@ public class Brand {
     @Column(name = "brand_name")
     String brandName;
 
+    @Column(name = "brand_img")
+    String brandImg;
+
     @OneToMany(mappedBy = "brand", fetch = FetchType.LAZY)
     List<Warehouse> warehouseList;
 

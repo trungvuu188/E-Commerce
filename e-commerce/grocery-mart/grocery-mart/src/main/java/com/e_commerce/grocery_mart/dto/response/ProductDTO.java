@@ -14,12 +14,12 @@ import java.util.List;
 public class ProductDTO {
 
     int productId;
+    int brandId;
     String brandName;
     String productName;
     String productDesc;
     String imageUrl;
     List<ProductSizeDTO> productSizeDTOList;
-    double basePrice;
-    double calculatedPrice;
-    boolean isOutOfStock;
+    double averageStar;
+    int totalStars;
 }

@@ -11,7 +11,6 @@ import com.e_commerce.grocery_mart.service.WarehouseService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -41,13 +40,6 @@ public class WarehouseController {
     @PostMapping
     ApiResponse<Void> createWarehouse(@RequestBody WarehouseCreationRequest request) {
         warehouseService.createWarehouse(request.getBrandId(), request.getWarehouseName());
-        return ApiResponse.<Void>builder()
-                .build();
-    }
-
-    @PostMapping("/inventory")
-    ApiResponse<Void> createProductInventory(@RequestBody ProductInventoryCreationRequest request) {
-        warehouseService.addProductInventory(request);
         return ApiResponse.<Void>builder()
                 .build();
     }

@@ -10,8 +10,9 @@ import org.springframework.web.multipart.MultipartFile;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class BrandCreationRequest {
+public class BrandUpdateRequest {
 
+    int brandId;
     String brandName;
     MultipartFile brandImg;
 }

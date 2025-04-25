@@ -1,12 +1,15 @@
 package com.e_commerce.grocery_mart.service.imp;
 
 import com.e_commerce.grocery_mart.dto.request.BrandCreationRequest;
+import com.e_commerce.grocery_mart.dto.request.BrandUpdateRequest;
 import com.e_commerce.grocery_mart.dto.response.BrandDTO;
 import com.e_commerce.grocery_mart.entity.Brand;
 import com.e_commerce.grocery_mart.exception.AppException;
 import com.e_commerce.grocery_mart.exception.ErrorCode;
 import com.e_commerce.grocery_mart.repository.BrandRepository;
 import com.e_commerce.grocery_mart.service.BrandService;
+import com.e_commerce.grocery_mart.service.CloudinaryService;
+import io.micrometer.common.util.StringUtils;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -22,6 +25,7 @@ import java.util.List;
 public class BrandServiceImp implements BrandService {
 
     BrandRepository brandRepository;
+    CloudinaryService cloudinaryService;
 
     @Override
     public List<BrandDTO> getAllBrands() {
@@ -32,6 +36,7 @@ public class BrandServiceImp implements BrandService {
             BrandDTO brandDTO = BrandDTO.builder()
                     .id(brand.getId())
                     .brandName(brand.getBrandName())
+                    .brandImg(brand.getBrandImg())
                     .build();
             brandDTOS.add(brandDTO);
         }
@@ -45,6 +50,7 @@ public class BrandServiceImp implements BrandService {
         return BrandDTO.builder()
                 .id(brand.getId())
                 .brandName(brand.getBrandName())
+                .brandImg(brand.getBrandImg())
                 .build();
     }
 
@@ -55,12 +61,25 @@ public class BrandServiceImp implements BrandService {
     }
 
     @Override
+    public void updateBrandById(BrandUpdateRequest request) {
+        Brand brand = getBrandById(request.getBrandId());
+        if(!StringUtils.isEmpty(request.getBrandName())) {
+            brand.setBrandName(request.getBrandName());
+        }
+        if(request.getBrandImg() != null) {
+            brand.setBrandImg(cloudinaryService.upload(request.getBrandImg()));
+        }
+        brandRepository.save(brand);
+    }
+
+    @Override
     public void addBrand(BrandCreationRequest request) {
         if(brandRepository.existsByBrandName(request.getBrandName())) {
             throw new AppException(ErrorCode.BRAND_EXISTED_EXCEPTION);
         }
         Brand brand = Brand.builder()
                 .brandName(request.getBrandName())
+                .brandImg(cloudinaryService.upload(request.getBrandImg()))
                 .build();
         brandRepository.save(brand);
     }

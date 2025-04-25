@@ -29,12 +29,13 @@ public class SecurityConfig {
     static String[] PUBLIC_ENDPOINTS = {
         "/auth/register", "/auth/login", "/auth/logout",
         "/brand", "/brand/{id}",
-        "/product", "/product/{id}"
+        "/product", "/product/{id}", "/product/feature",
+        "/warehouse/inventory"
     };
 
     static String[] ADMIN_ENDPOINTS = {
-        "/admin/role/**",
-        "/warehouse/**"
+        "/admin/**",
+        "/warehouse/**",
     };
 
     static String[] CUSTOMER_ENDPOINT = {
