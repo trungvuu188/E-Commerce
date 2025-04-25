@@ -29,10 +29,6 @@ public class OrderItem {
     @JoinColumn(name = "size_id", referencedColumnName = "id", insertable=false, updatable=false)
     Size size;
 
-    @ManyToOne
-    @JoinColumn(name = "weight_id", referencedColumnName = "id", insertable=false, updatable=false)
-    Weight weight;
-
     @Column(name = "quantity")
     int quantity;
 

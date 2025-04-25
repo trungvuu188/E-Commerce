@@ -1,18 +1,22 @@
 package com.e_commerce.grocery_mart.repository;
 
+import com.e_commerce.grocery_mart.entity.Product;
 import com.e_commerce.grocery_mart.entity.ProductSize;
 import com.e_commerce.grocery_mart.entity.keys.KeyProductSize;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface ProductSizeRepository extends JpaRepository<ProductSize, KeyProductSize>, JpaSpecificationExecutor<ProductSize> {
     ProductSize findByKeyProductSize(KeyProductSize keyProductSize);
-
-//    @Query("SELECT ps FROM product_size ps WHERE ps.priceScale = (SELECT MIN(ps2.priceScale) FROM product_size ps2)")
-//    Optional<ProductSize> findProductSizeWithMinPriceScale();
+    @Modifying
+    @Query("DELETE FROM product_size ps where ps.keyProductSize.product.id = :id")
+    int deleteAndGetCountById(@Param("id") int id);
 }

@@ -20,13 +20,19 @@ public class ProductController {
 
     ProductService productService;
 
+    @GetMapping("/feature")
+    ApiResponse<List<ProductDTO>> getAllProducts(){
+        return ApiResponse.<List<ProductDTO>>builder()
+                .result(productService.getAllFeatureProduct())
+                .build();
+    }
+
     @GetMapping
     ApiResponse<List<ProductDTO>> getAllProducts(@RequestParam(required = false) Integer brandId,
                                                  @RequestParam(required = false) String brandName,
-                                                 @RequestParam(required = false) Integer sizeId,
-                                                 @RequestParam(required = false) Integer weightId){
+                                                 @RequestParam(required = false) String productName){
         return ApiResponse.<List<ProductDTO>>builder()
-                .result(productService.getAllProduct(brandId, brandName, sizeId, weightId))
+                .result(productService.getAllProduct(brandId, brandName, productName))
                 .build();
     }
 
@@ -45,7 +51,7 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    ApiResponse<Void> modifyProduct(@PathVariable int id, @RequestBody ProductModifyRequest request){
+    ApiResponse<Void> modifyProduct(@PathVariable int id, @ModelAttribute ProductModifyRequest request){
         productService.modifyProduct(id, request);
         return ApiResponse.<Void>builder()
                 .build();

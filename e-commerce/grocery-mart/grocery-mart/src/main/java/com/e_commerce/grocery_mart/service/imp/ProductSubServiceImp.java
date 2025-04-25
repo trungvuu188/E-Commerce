@@ -1,15 +1,11 @@
 package com.e_commerce.grocery_mart.service.imp;
 
 import com.e_commerce.grocery_mart.dto.request.SizeCreationRequest;
-import com.e_commerce.grocery_mart.dto.request.WeightCreationRequest;
 import com.e_commerce.grocery_mart.dto.response.SizeDTO;
-import com.e_commerce.grocery_mart.dto.response.WeightDTO;
 import com.e_commerce.grocery_mart.entity.Size;
-import com.e_commerce.grocery_mart.entity.Weight;
 import com.e_commerce.grocery_mart.exception.AppException;
 import com.e_commerce.grocery_mart.exception.ErrorCode;
 import com.e_commerce.grocery_mart.repository.SizeRepository;
-import com.e_commerce.grocery_mart.repository.WeightRepository;
 import com.e_commerce.grocery_mart.service.ProductSubService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +22,6 @@ import java.util.List;
 public class ProductSubServiceImp implements ProductSubService {
 
     SizeRepository sizeRepository;
-    WeightRepository weightRepository;
 
     @Override
     public List<SizeDTO> getSizes() {
@@ -65,46 +60,6 @@ public class ProductSubServiceImp implements ProductSubService {
     public void removeSize(int sizeId) {
         if(sizeRepository.deleteAndGetCountById(sizeId) == 0) {
             throw new AppException(ErrorCode.SIZE_NOTFOUND_EXCEPTION);
-        }
-    }
-
-    @Override
-    public List<WeightDTO> getWeights() {
-
-        List<WeightDTO> weightDTOS = new ArrayList<>();
-        List<Weight> weights = weightRepository.findAll();
-        for(Weight weight : weights) {
-            WeightDTO weightDTO = WeightDTO.builder()
-                    .id(weight.getId())
-                    .weightName(weight.getWeightName())
-                    .build();
-            weightDTOS.add(weightDTO);
-        }
-        return weightDTOS;
-    }
-
-    @Override
-    public Weight getWeightById(int weightId) {
-        return weightRepository.findById(weightId)
-                .orElseThrow(() -> new AppException(ErrorCode.WEIGHT_NOTFOUND_EXCEPTION));
-    }
-
-    @Override
-    public void addWeight(WeightCreationRequest request) {
-        if(weightRepository.existsByWeightName(request.getWeightName().toUpperCase())) {
-            throw new AppException(ErrorCode.WEIGHT_EXISTED_EXCEPTION);
-        }
-        Weight weight = Weight.builder()
-                .weightName(request.getWeightName())
-                .build();
-        weightRepository.save(weight);
-    }
-
-    @Override
-    @Transactional
-    public void removeWeight(int weightId) {
-        if(weightRepository.deleteAndGetCountById(weightId) == 0) {
-            throw new AppException(ErrorCode.WEIGHT_NOTFOUND_EXCEPTION);
         }
     }
 }

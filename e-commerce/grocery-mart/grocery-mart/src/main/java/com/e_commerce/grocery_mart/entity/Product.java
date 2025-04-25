@@ -58,9 +58,6 @@ public class Product {
     @OneToMany(mappedBy = "keyProductSize.product", cascade = CascadeType.ALL, orphanRemoval = true)
     List<ProductSize> productSizes;
 
-    @OneToMany(mappedBy = "keyProductWeight.product", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<ProductWeight> productWeights;
-
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
     List<CartItem> cartItemList;
 
@@ -70,16 +67,12 @@ public class Product {
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
     List<WarehouseInventory> warehouseInventories;
 
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+    List<Rating> ratings;
 
     //    Bidirectional (can set productSize without setting productId)
     public void addProductSize(ProductSize productSize) {
         productSizes.add(productSize);
         productSize.setProduct(this);
-    }
-
-//    Bidirectional
-    public void addProductWeight(ProductWeight productWeight) {
-        productWeights.add(productWeight);
-        productWeight.setProduct(this);
     }
 }

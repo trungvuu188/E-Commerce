@@ -1,15 +1,17 @@
 package com.e_commerce.grocery_mart.repository;
 
 import com.e_commerce.grocery_mart.entity.Product;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Integer>, JpaSpecificationExecutor<Product> {
+
+    @EntityGraph(attributePaths = {"productSizes"})
+    List<Product> findAll();
 
     boolean existsByProductName(String productName);
 

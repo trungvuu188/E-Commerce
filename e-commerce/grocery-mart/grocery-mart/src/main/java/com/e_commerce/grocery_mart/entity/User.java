@@ -29,7 +29,7 @@ public class User {
     String password;
 
     @ManyToOne
-    @JoinColumn(name = "role_id", referencedColumnName = "id", insertable=false, updatable=false)
+    @JoinColumn(name = "role_id", referencedColumnName = "id")
     Role role;
 
     @OneToMany(mappedBy = "createPerson")

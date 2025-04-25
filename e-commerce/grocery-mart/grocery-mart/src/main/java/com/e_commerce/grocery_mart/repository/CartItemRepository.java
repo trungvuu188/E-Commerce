@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CartItemRepository extends JpaRepository<CartItem, Integer> {
 
-    CartItem findByCartIdAndProductIdAndSizeIdAndWeightId(int cartId, int productId, int sizeId, int weightId);
+    CartItem findByCartIdAndProductIdAndSizeId(int cartId, int productId, int sizeId);
     @Modifying
     @Query("DELETE FROM cart_item c where c.id = :id")
     int deleteAndGetCountById(@Param("id") int id);

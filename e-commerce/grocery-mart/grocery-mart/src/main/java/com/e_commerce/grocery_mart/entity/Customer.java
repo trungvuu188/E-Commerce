@@ -40,4 +40,7 @@ public class Customer extends User {
 
     @OneToMany(mappedBy = "customer")
     List<Order> orderList;
+
+    @OneToMany(mappedBy = "customer")
+    List<Rating> ratings;
 }

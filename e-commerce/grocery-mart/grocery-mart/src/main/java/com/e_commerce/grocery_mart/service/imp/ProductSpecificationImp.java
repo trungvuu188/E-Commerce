@@ -1,9 +1,6 @@
 package com.e_commerce.grocery_mart.service.imp;
 
-import com.e_commerce.grocery_mart.entity.Brand;
-import com.e_commerce.grocery_mart.entity.Product;
-import com.e_commerce.grocery_mart.entity.ProductSize;
-import com.e_commerce.grocery_mart.entity.ProductWeight;
+import com.e_commerce.grocery_mart.entity.*;
 import com.e_commerce.grocery_mart.service.ProductSpecification;
 import jakarta.persistence.criteria.Join;
 import org.springframework.data.jpa.domain.Specification;
@@ -19,24 +16,13 @@ public class ProductSpecificationImp implements ProductSpecification {
     @Override
     public Specification<Product> brandNameLike(String brandName) {
         return ((root, query, builder) -> {
-            Join<Product, Brand> productBrandJoin = root.join("brand");
-            return builder.like(productBrandJoin.get("brandName"), "%" + brandName + "%");
+            Join<Product, Brand> brandJoin = root.join("brand");
+            return builder.like(brandJoin.get("brandName"), "%" + brandName + "%");
         });
     }
 
     @Override
-    public Specification<Product> sizeLike(int sizeId) {
-        return ((root, query, builder) -> {
-            Join<Product, ProductSize> productProductSizeJoin = root.join("productSizes");
-            return builder.equal(productProductSizeJoin.get("size").as(Integer.class), sizeId);
-        });
-    }
-
-    @Override
-    public Specification<Product> weightLike(int weightId) {
-        return ((root, query, builder) -> {
-            Join<Product, ProductWeight> productProductWeightJoin = root.join("productWeights");
-            return builder.equal(productProductWeightJoin.get("weight").as(Integer.class), weightId);
-        });
+    public Specification<Product> productNameLike(String productName) {
+        return ((root, query, builder) -> builder.like(root.get("productName"), "%" + productName + "%"));
     }
 }

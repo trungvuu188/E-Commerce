@@ -66,6 +66,7 @@ public class AuthenticationServiceImp implements AuthenticationService {
     long REFRESHABLE_DURATION;
 
     @Override
+    @Transactional
     public AuthenticationResponse accountRegister(AccountRegisterRequest request) {
 
         Role role = roleRepository.findByRoleName(PredefinedRole.CUSTOMER_ROLE)
@@ -78,12 +79,11 @@ public class AuthenticationServiceImp implements AuthenticationService {
                 .username(request.getUsername())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(role)
-
                 .build();
         customerRepository.save(customer);
         return login(LoginRequest.builder()
                 .username(customer.getUsername())
-                .password(customer.getPassword())
+                .password(request.getPassword())
                 .build());
     }
 
@@ -101,10 +101,11 @@ public class AuthenticationServiceImp implements AuthenticationService {
 
         var token = generateToken(user);
 
-        if(user.getRole().getRoleName() == PredefinedRole.CUSTOMER_ROLE) {
+        if(user.getRole().getRoleName().equals(PredefinedRole.CUSTOMER_ROLE)) {
             Customer customer = (Customer) user;
             CustomerAuthResponse response = CustomerAuthResponse.builder()
                     .token(token)
+                    .customerId(customer.getId())
                     .fullName(customer.getFullName())
                     .email(customer.getEmail())
                     .password(customer.getPassword())
@@ -112,7 +113,7 @@ public class AuthenticationServiceImp implements AuthenticationService {
                     .phoneNumber(customer.getPhone())
                     .build();
             return response;
-        } else if(user.getRole().getRoleName() == PredefinedRole.ADMIN_ROLE) {
+        } else if(user.getRole().getRoleName().equals(PredefinedRole.ADMIN_ROLE)) {
             AdminAuthResponse response = AdminAuthResponse.builder()
                     .token(token)
                     .build();
@@ -170,7 +171,8 @@ public class AuthenticationServiceImp implements AuthenticationService {
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
                 .subject(user.getUsername())
                 .issuer("404Xuv.dev")
-                .issueTime(new Date(
+                .issueTime(new Date())
+                .expirationTime(new Date(
                         Instant.now().plus(VALID_DURATION, ChronoUnit.SECONDS).toEpochMilli()))
                 .jwtID(UUID.randomUUID().toString())
                 .claim("scope", buildScope(user))

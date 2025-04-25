@@ -1,6 +1,7 @@
 package com.e_commerce.grocery_mart.entity.keys;
 
 import com.e_commerce.grocery_mart.entity.Product;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;

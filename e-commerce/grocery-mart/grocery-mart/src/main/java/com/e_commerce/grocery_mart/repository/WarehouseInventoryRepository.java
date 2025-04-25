@@ -2,16 +2,21 @@ package com.e_commerce.grocery_mart.repository;
 
 import com.e_commerce.grocery_mart.entity.WarehouseInventory;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-@Repository
-public interface WarehouseInventoryRepository extends JpaRepository<WarehouseInventory, Integer> {
+import java.util.List;
 
-    boolean existsByProductIdAndSizeIdAndWeightId(int productId, int sizeId, int weightId);
+@Repository
+public interface WarehouseInventoryRepository extends JpaRepository<WarehouseInventory, Integer>, JpaSpecificationExecutor<WarehouseInventory> {
+
+    boolean existsByProductIdAndSizeId(int productId, int sizeId);
 
     @Modifying
     @Query("DELETE FROM warehouse_inventory w where w.id = :id")
     int deleteAndGetCountById(int id);
+
+    List<WarehouseInventory> findAllByProductId(int productId);
 }

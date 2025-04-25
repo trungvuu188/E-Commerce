@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -13,12 +15,8 @@ import lombok.experimental.FieldDefaults;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ProductInventoryDTO {
 
-    int warehouseInventoryId;
     int productId;
     String productName;
-    int sizeId;
-    String sizeName;
-    int weightId;
-    String weightName;
-    int quantity;
+    List<ProductInventoryDetailDTO> productInventoryDetailDTOList;
+
 }

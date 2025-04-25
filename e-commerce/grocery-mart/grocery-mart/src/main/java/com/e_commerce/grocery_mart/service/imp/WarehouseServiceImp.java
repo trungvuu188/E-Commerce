@@ -1,20 +1,18 @@
 package com.e_commerce.grocery_mart.service.imp;
 
-import com.e_commerce.grocery_mart.dto.request.ProductInventoryCreationRequest;
 import com.e_commerce.grocery_mart.dto.request.ProductInventoryUpdateRequest;
 import com.e_commerce.grocery_mart.dto.response.ProductInventoryDTO;
+import com.e_commerce.grocery_mart.dto.response.ProductSizeDTO;
 import com.e_commerce.grocery_mart.dto.response.WarehouseDTO;
 import com.e_commerce.grocery_mart.entity.Product;
 import com.e_commerce.grocery_mart.entity.Warehouse;
 import com.e_commerce.grocery_mart.entity.WarehouseInventory;
 import com.e_commerce.grocery_mart.exception.AppException;
 import com.e_commerce.grocery_mart.exception.ErrorCode;
+import com.e_commerce.grocery_mart.mapper.ProductMapper;
 import com.e_commerce.grocery_mart.repository.WarehouseInventoryRepository;
 import com.e_commerce.grocery_mart.repository.WarehouseRepository;
-import com.e_commerce.grocery_mart.service.BrandService;
-import com.e_commerce.grocery_mart.service.ProductService;
-import com.e_commerce.grocery_mart.service.ProductSubService;
-import com.e_commerce.grocery_mart.service.WarehouseService;
+import com.e_commerce.grocery_mart.service.*;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -32,7 +30,7 @@ public class WarehouseServiceImp implements WarehouseService {
 
     WarehouseRepository warehouseRepository;
     WarehouseInventoryRepository warehouseInventoryRepository;
-    ProductService productService;
+    ProductMapper productMapper;
     ProductSubService productSubService;
     BrandService brandService;
     @Override
@@ -86,39 +84,28 @@ public class WarehouseServiceImp implements WarehouseService {
                 .orElseThrow(() -> new AppException(ErrorCode.WAREHOUSE_NOTFOUND_EXCEPTION));
         List<ProductInventoryDTO> productInventoryDTOS = new ArrayList<>();
         warehouse.getWarehouseInventories().forEach(warehouseInventory -> {
-            ProductInventoryDTO productInventoryDTO = ProductInventoryDTO.builder()
-                    .warehouseInventoryId(warehouseInventory.getId())
-                    .productId(warehouseInventory.getProduct().getId())
-                    .productName(warehouseInventory.getProduct().getProductName())
-                    .sizeId(warehouseInventory.getSize().getId())
-                    .sizeName(warehouseInventory.getSize().getSizeName())
-                    .weightId(warehouseInventory.getWeight().getId())
-                    .weightName(warehouseInventory.getWeight().getWeightName())
-                    .quantity(warehouseInventory.getQuantity())
-                    .build();
+            ProductInventoryDTO productInventoryDTO = productMapper.toProductInventoryDTO(warehouseInventory);
             productInventoryDTOS.add(productInventoryDTO);
         });
         return productInventoryDTOS;
     }
 
     @Override
-    public void addProductInventory(ProductInventoryCreationRequest request) {
-        Warehouse warehouse = warehouseRepository.findById(request.getWarehouseId())
+    public void addProductInventory(int warehouseId, Product product, List<ProductSizeDTO> productSizeDTOS) {
+        Warehouse warehouse = warehouseRepository.findById(warehouseId)
                 .orElseThrow(() -> new AppException(ErrorCode.WAREHOUSE_NOTFOUND_EXCEPTION));
-        if(warehouseInventoryRepository.existsByProductIdAndSizeIdAndWeightId(
-                request.getProductId(),
-                request.getSizeId(),
-                request.getWeightId())){
-            throw new AppException(ErrorCode.PRODUCT_INVENTORY_EXISTED_EXCEPTION);
-        }
-        WarehouseInventory warehouseInventory = WarehouseInventory.builder()
-                .warehouse(warehouse)
-                .product(productService.getBaseProductById(request.getProductId()))
-                .size(productSubService.getSizeById(request.getSizeId()))
-                .weight(productSubService.getWeightById(request.getWeightId()))
-                .quantity(request.getQuantity())
-                .build();
-        warehouseInventoryRepository.save(warehouseInventory);
+        productSizeDTOS.forEach(productSizeDTO -> {
+            if(warehouseInventoryRepository.existsByProductIdAndSizeId(product.getId(), productSizeDTO.getSizeId())){
+                throw new AppException(ErrorCode.PRODUCT_INVENTORY_EXISTED_EXCEPTION);
+            }
+            WarehouseInventory warehouseInventory = WarehouseInventory.builder()
+                    .warehouse(warehouse)
+                    .product(product)
+                    .size(productSubService.getSizeById(productSizeDTO.getSizeId()))
+                    .quantity(productSizeDTO.getQuantity())
+                    .build();
+            warehouseInventoryRepository.save(warehouseInventory);
+        });
     }
 
     @Override
@@ -135,5 +122,10 @@ public class WarehouseServiceImp implements WarehouseService {
         if(warehouseInventoryRepository.deleteAndGetCountById(id) == 0){
             throw new AppException(ErrorCode.PRODUCT_INVENTORY_NOTFOUND_EXCEPTION);
         }
+    }
+
+    @Override
+    public List<WarehouseInventory> getInventoryByProductId(int productId) {
+        return warehouseInventoryRepository.findAllByProductId(productId);
     }
 }

@@ -1,5 +1,6 @@
 package com.e_commerce.grocery_mart.configuration;
 
+import com.e_commerce.grocery_mart.constant.PredefinedRole;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -26,15 +27,19 @@ import org.springframework.web.filter.CorsFilter;
 public class SecurityConfig {
 
     static String[] PUBLIC_ENDPOINTS = {
-        "/auth/register", "/auth/login", "/auth/logout", "/admin/**"
+        "/auth/register", "/auth/login", "/auth/logout",
+        "/brand", "/brand/{id}",
+        "/product", "/product/{id}", "/product/feature",
+        "/warehouse/inventory"
     };
 
     static String[] ADMIN_ENDPOINTS = {
-
+        "/admin/**",
+        "/warehouse/**",
     };
 
     static String[] CUSTOMER_ENDPOINT = {
-
+        "/customer/cart/**"
     };
 
     CustomJwtDecoder customJwtDecoder;
@@ -42,10 +47,11 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain (HttpSecurity httpSecurity) throws Exception {
 
-        httpSecurity.authorizeHttpRequests(request -> request.requestMatchers(PUBLIC_ENDPOINTS)
-                .permitAll()
-                .anyRequest()
-                .authenticated());
+        httpSecurity.authorizeHttpRequests(request ->
+                request.requestMatchers(PUBLIC_ENDPOINTS).permitAll()
+                        .requestMatchers(ADMIN_ENDPOINTS).hasRole(PredefinedRole.ADMIN_ROLE)
+                        .requestMatchers(CUSTOMER_ENDPOINT).hasRole(PredefinedRole.CUSTOMER_ROLE)
+                .anyRequest().authenticated());
 
         httpSecurity.oauth2ResourceServer(oauth2 -> oauth2.jwt(jwtConfigurer -> jwtConfigurer
                 .decoder(customJwtDecoder)

@@ -29,8 +29,6 @@ public enum ErrorCode {
 //Product
     SIZE_EXISTED_EXCEPTION(5000, "Size is already existed", HttpStatus.BAD_REQUEST),
     SIZE_NOTFOUND_EXCEPTION(5000, "Size is not found", HttpStatus.BAD_REQUEST),
-    WEIGHT_EXISTED_EXCEPTION(5000, "Weight is already existed", HttpStatus.BAD_REQUEST),
-    WEIGHT_NOTFOUND_EXCEPTION(5000, "Weight is not found", HttpStatus.BAD_REQUEST),
     BRAND_EXISTED_EXCEPTION(5000, "Brand is already existed", HttpStatus.BAD_REQUEST),
     BRAND_NOTFOUND_EXCEPTION(5000, "Brand is not found", HttpStatus.BAD_REQUEST),
     PRODUCT_EXISTED_EXCEPTION(5000, "Product is already existed", HttpStatus.BAD_REQUEST),

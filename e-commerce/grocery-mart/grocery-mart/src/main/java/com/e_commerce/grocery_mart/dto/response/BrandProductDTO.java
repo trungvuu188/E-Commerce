@@ -1,6 +1,5 @@
-package com.e_commerce.grocery_mart.dto.request;
+package com.e_commerce.grocery_mart.dto.response;
 
-import com.e_commerce.grocery_mart.dto.response.ProductSizeDTO;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -14,12 +13,11 @@ import java.util.List;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ProductInventoryCreationRequest {
+public class BrandProductDTO {
 
     int warehouseId;
-    String productName;
-    String productDesc;
-    double basePrice;
-    String imageUrl;
-    List<ProductSizeDTO> productSizeDTOS;
+    String warehouseName;
+    int brandId;
+    String brandName;
+    List<ProductInventoryDTO> productInventoryDTOList;
 }

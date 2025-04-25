@@ -29,10 +29,6 @@ public class WarehouseInventory {
     @JoinColumn(name = "size_id", referencedColumnName = "id")
     Size size;
 
-    @ManyToOne
-    @JoinColumn(name = "weight_id", referencedColumnName = "id")
-    Weight weight;
-
     @Column(name = "quantity")
     int quantity;
 }

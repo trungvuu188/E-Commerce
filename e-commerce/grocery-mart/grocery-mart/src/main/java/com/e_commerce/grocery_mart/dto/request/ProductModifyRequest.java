@@ -1,7 +1,6 @@
 package com.e_commerce.grocery_mart.dto.request;
 
 import com.e_commerce.grocery_mart.dto.response.ProductSizeDTO;
-import com.e_commerce.grocery_mart.dto.response.ProductWeightDTO;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -18,11 +17,9 @@ import java.util.UUID;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ProductModifyRequest {
 
-//    UUID modifyPersonId;
+    UUID modifyPersonId;
     String productName;
     String productDesc;
     double basePrice;
     String imageUrl;
-    List<ProductSizeDTO> productSizeDTOS;
-    List<ProductWeightDTO> productWeightDTOS;
 }
